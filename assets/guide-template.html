@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<!--
+  阅读路线导读卡 · 可复用模板（reading-roadmap / assets）
+  =========================================================
+  当前版本范围：仅支持在线文章/教程/文档（目标必须有可访问的在线章节）。
+  本地电子书（file://）与纸质书页码形态为预留扩展，本版生成时不用，但样式已保留。
+  用法：agent 按下方占位符清单逐项替换 {{XXX}} 后交付，替换即成品，无需再改结构。
+
+  占位符清单：
+    {{BOOK_TITLE}}     书名（页面标题与 hero 标题）
+    {{BOOK_SUBTITLE}}  副标：画像摘要，如「求职面试为主 · 前端基础 · 每日 15 分钟」
+    {{META_TAGS}}      一组 meta 标签，如 <span>4 周 / 28 天</span><span>每日 15 分钟</span>
+    {{TOTAL_DAYS}}     总天数（进度条分母）
+    {{STORAGE_KEY}}    本地存储 key，建议形如 roadmap_<书拼音>_v1
+    {{WEEKS}}          周分组 + 逐日表格的完整 HTML（agent 生成，见下方「表格列与链接形态」）
+    {{RULES}}  规则文案（可选，最多一句，能省则省；例如"链接均取自官方 sitemap"）
+                —— 导读卡不堆规则说明，只保留必要信息
+    {{SOURCES}}        页脚来源说明（一行）
+
+  表格列（固定 6 列）：
+    天 / 主题 / 15 分钟怎么做 / 当日微目标 / 定位 / 打卡
+  定位列三种形态（按可用性优先：在线 > 本机 > 页码文字）：
+    1) 在线：  <a class="lk" href="https://..." target="_blank" rel="noopener">第 3 章 · 章节名</a>
+               —— 所有链接一律新窗口打开（target="_blank" + rel="noopener"），禁止原窗口跳转
+    2) 本机：  <a class="lk local" href="file:///绝对路径" target="_blank" rel="noopener">第 3 章</a><span class="badge">本机</span>
+               PDF 可带页码锚点：file:///绝对路径.pdf#page=23
+    3) 纸质/无：<span class="loc">第 3 章 · 第 41–67 页</span>
+
+  硬规则（生成时不可省略）：
+    - 能在线不本机、能本机不空白；file:// 链接只在用户本机、路径不变时有效，
+      必须配 .local + .badge「本机」标注；交付说明中写明「发布线上或移动文件后本机链接失效」。
+    - 无链接的行必须写页码/章节区间文字，不得留空。
+    - 无 emoji；视觉 token 固定（白底、#0F766E 强调、PingFang 字体栈）。
+-->
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{BOOK_TITLE}} · 阅读路线</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230F766E'/%3E%3Cpath d='M9 9h14v14H9z' fill='none' stroke='%23fff' stroke-width='2.2'/%3E%3Cpath d='M13 16.5l2.2 2.2L19.5 13.5' fill='none' stroke='%23fff' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<style>
+:root{
+  --ink:#23232A; --mut:#6B6B72; --faint:#8A8A90; --soft:#9AA0A6;
+  --line:#E6E6E1; --panel:#F7F7F4; --acc:#0F766E; --body:#3A3A41;
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:auto;}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;color:var(--ink);background:#fff;line-height:1.7;}
+.page{max-width:980px;margin:0 auto;padding:36px 24px 60px;}
+h1,h2,h3{margin:0;font-weight:700;}
+.hero h1{font-size:32px;letter-spacing:2px;}
+.hero .sub{font-size:14px;color:var(--mut);margin:6px 0 0;}
+.meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;}
+.meta span{font-size:12px;color:var(--faint);border:1px solid var(--line);border-radius:999px;padding:4px 12px;background:#fff;}
+.progress{margin:20px 0 0;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 18px;}
+.progress .bar{height:8px;background:#E9E9E4;border-radius:999px;overflow:hidden;margin-top:8px;}
+.progress .fill{height:100%;width:0;background:var(--acc);border-radius:999px;transition:width .3s;}
+.progress .txt{font-size:13px;color:var(--mut);}
+.progress .txt b{color:var(--acc);font-weight:700;}
+.flowhint{font-size:12.5px;color:var(--mut);background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px 16px;margin:14px 0 0;line-height:1.7;}
+.flowhint b{color:var(--acc);font-weight:600;}
+.block{margin:44px 0 0;}
+.h{display:flex;align-items:baseline;gap:12px;margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid var(--line);flex-wrap:wrap;}
+.no{font-size:13px;font-weight:700;color:var(--acc);letter-spacing:1px;}
+.h h2{font-size:21px;letter-spacing:1px;}
+.h .scope{font-size:12.5px;color:var(--faint);}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:14px;background:#fff;}
+table.plan{width:100%;border-collapse:collapse;table-layout:fixed;min-width:760px;}
+.plan th{font-size:12px;color:var(--faint);font-weight:600;text-align:left;padding:11px 12px;border-bottom:1px solid var(--line);background:var(--panel);letter-spacing:.5px;}
+.plan td{font-size:13px;line-height:1.7;color:var(--body);padding:9px 12px;border-bottom:1px solid #F0F0EC;vertical-align:top;}
+.plan tr:last-child td{border-bottom:none;}
+.plan td b{font-weight:600;color:var(--ink);}
+.plan td.day{font-weight:700;color:var(--ink);white-space:nowrap;}
+.plan td.go{color:var(--acc);font-weight:600;}
+a.lk{color:var(--acc);text-decoration:none;border-bottom:1px solid rgba(15,118,110,.4);}
+a.lk:hover{border-bottom-color:var(--acc);}
+a.lk.local{border-bottom-style:dashed;}
+.badge{display:inline-block;font-size:10.5px;color:#8A8A90;border:1px solid var(--line);border-radius:999px;padding:0 7px;margin-left:5px;vertical-align:1px;}
+.loc{color:var(--mut);}
+.plan .ck{width:20px;height:20px;accent-color:var(--acc);cursor:pointer;display:block;margin:2px auto 0;}
+.plan td.cktd{text-align:center;}
+tr.done td{background:#FBFBF8;}
+tr.done td:not(.day){color:var(--faint);}
+tr.done td.go{color:var(--faint);}
+.rule{margin:18px 0 0;font-size:13px;color:var(--mut);background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 18px;line-height:1.9;}
+.rule b{color:var(--ink);font-weight:600;}
+.foot{margin-top:48px;padding:18px 0 0;border-top:1px solid var(--line);font-size:12.5px;color:var(--faint);line-height:1.8;}
+.foot b{color:var(--mut);font-weight:600;}
+.reset{font-family:inherit;font-size:12.5px;color:var(--mut);background:transparent;border:1px solid var(--line);border-radius:999px;padding:5px 16px;cursor:pointer;}
+.reset:hover{color:#B3422F;border-color:#B3422F;}
+@media(max-width:720px){.hero h1{font-size:25px;}.h h2{font-size:18px;}}
+</style>
+</head>
+<body>
+<div class="page">
+
+<header class="hero">
+  <h1>{{BOOK_TITLE}}</h1>
+  <p class="sub">{{BOOK_SUBTITLE}}</p>
+  <div class="meta">{{META_TAGS}}</div>
+  <div class="progress">
+    <div class="txt">已完成 <b id="pct">0</b> / {{TOTAL_DAYS}} 天</div>
+    <div class="bar"><div class="fill" id="bar"></div></div>
+  </div>
+  <div class="flowhint">点每行末尾的方框打卡，进度自动保存在本机浏览器。</div>
+</header>
+
+{{WEEKS}}
+
+<div class="rule">{{RULES}}</div>
+<!-- {{RULES}} 不需要时整块删除本 div；需要时也只放一句最短必要说明 -->
+
+<footer class="foot">
+  {{SOURCES}}<br>
+  打卡状态保存在本机浏览器 localStorage（key：{{STORAGE_KEY}}），清除浏览器数据会丢失。<button class="reset" id="resetBtn" type="button">重置打卡</button>
+</footer>
+
+</div>
+<script>
+(function(){
+  var KEY='{{STORAGE_KEY}}';
+  function load(){try{var v=localStorage.getItem(KEY);return v?JSON.parse(v):{}}catch(e){return{}}}
+  function save(s){try{localStorage.setItem(KEY,JSON.stringify(s))}catch(e){}}
+  var state=load();
+  var cks=document.querySelectorAll('input.ck');
+  var total=cks.length;
+  function apply(){
+    var done=0;
+    cks.forEach(function(c){
+      var d=c.getAttribute('data-day');
+      var on=!!state[d];
+      c.checked=on;
+      var tr=c.closest('tr');
+      if(tr){tr.classList.toggle('done',on);}
+      if(on){done++;}
+    });
+    document.getElementById('pct').textContent=done;
+    document.getElementById('bar').style.width=(total?Math.round(done/total*100):0)+'%';
+  }
+  cks.forEach(function(c){
+    c.addEventListener('change',function(){
+      var d=c.getAttribute('data-day');
+      state[d]=c.checked;
+      save(state);
+      apply();
+    });
+  });
+  var rb=document.getElementById('resetBtn');
+  if(rb){
+    rb.addEventListener('click',function(){
+      if(window.confirm('确定清空全部打卡记录？')){
+        state={};
+        save(state);
+        apply();
+      }
+    });
+  }
+  apply();
+})();
+</script>
+</body>
+</html>
