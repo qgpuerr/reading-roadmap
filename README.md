@@ -1,4 +1,4 @@
-# Reading Roadmap · 豆包读书路线规划 Skill
+# Reading Roadmap · 读书路线规划 Skill
 
 给定一本书或在线教程，**先问清你的阅读目的**，再产出按目标重排的章节阅读顺序、逐日学习计划，以及一份可打卡的 HTML 导读卡。
 
@@ -21,24 +21,28 @@
 
 ## 安装
 
-把 `reading-roadmap` 文件夹整个复制到豆包工作区的用户技能目录：
+**方式一：git clone（推荐，一条命令）**
 
-```
-<workspace>/.user_skills/reading-roadmap/
+```bash
+git clone https://github.com/qgpuerr/reading-roadmap.git <你的技能目录>/.user_skills/reading-roadmap
 ```
 
-（`.user_skills` 是豆包的用户自定义技能目录，已有其他自定义技能的话放在同一层即可。）
+**方式二：下载 ZIP**
+
+在仓库页点 **Code → Download ZIP**，解压后把 `reading-roadmap` 文件夹放入 `<你的技能目录>/.user_skills/` 下。
+
+（`.user_skills` 是客户端工作区下的用户自定义技能目录，和已有自定义技能放在同一层即可。）
 
 ## 使用
 
-直接对豆包说这类话即可触发：
+直接对助手说这类话即可触发：
 
 - "帮我给这本书排个阅读顺序，我不想从第一章读"
 - "按我的目标安排一下阅读路线"
 - "具体到每一天，每天 15 分钟"
 - "给我做一份阅读路线导读卡"
 
-豆包会**先问你三个问题**（目的 / 熟悉度 / 时间），确认后再给路线。
+助手会**先问你三个问题**（目的 / 熟悉度 / 时间），确认后再给路线。
 
 ## 范围（v1）
 
