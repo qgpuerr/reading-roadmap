@@ -21,6 +21,14 @@
 
 ## 安装
 
+**方式一：git clone（推荐，一条命令）**
+
+```bash
+git clone https://github.com/qgpuerr/reading-roadmap.git <你的技能目录>/.user_skills/reading-roadmap
+```
+
+**方式二：直接复制**
+
 把 `reading-roadmap` 文件夹放进 `<你的技能目录>/.user_skills/` 下即可，无需命令行。（从别人那里拿到文件夹，或下载 ZIP 解压后，都是这么放。）
 
 （`.user_skills` 是客户端工作区下的用户自定义技能目录，和已有自定义技能放在同一层即可。）
