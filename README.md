@@ -44,6 +44,10 @@ git clone https://github.com/qgpuerr/reading-roadmap.git <你的技能目录>/.u
 
 助手会**先问你三个问题**（目的 / 熟悉度 / 时间），确认后再给路线。
 
+## 示例
+
+[Hello-Agents 28 天阅读路线](examples/Hello-Agents%2028%E5%A4%A9%E9%98%85%E8%AF%BB%E8%B7%AF%E7%BA%BF.html) —— 一份完整的导读卡示例：以"求职面试为主"目标重排《Hello-Agents 智能体教程》章节，28 天逐日计划、每日链接精确到小节、可勾选打卡。下载到本地双击打开即可用；需要线上访问时，可在豆包客户端直接"发布"为网页链接。
+
 ## 范围（v1）
 
 - 支持：有可访问在线章节的文章 / 教程 / 文档 / 开源仓库（docsify、GitBook、GitHub 等）
@@ -57,6 +61,8 @@ reading-roadmap/
 ├── SKILL.md                    技能入口（agent 读取）
 ├── assets/
 │   └── guide-template.html     可复用导读卡模板（占位符式）
+├── examples/
+│   └── Hello-Agents 28 天阅读路线.html  完整导读卡示例
 └── references/
     ├── profiling.md            三问问题集与选项
     ├── routing.md              类型 × 目的决策矩阵

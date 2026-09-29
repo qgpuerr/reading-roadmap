@@ -57,8 +57,6 @@ h1,h2,h3{margin:0;font-weight:700;}
 .progress .fill{height:100%;width:0;background:var(--acc);border-radius:999px;transition:width .3s;}
 .progress .txt{font-size:13px;color:var(--mut);}
 .progress .txt b{color:var(--acc);font-weight:700;}
-.flowhint{font-size:12.5px;color:var(--mut);background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px 16px;margin:14px 0 0;line-height:1.7;}
-.flowhint b{color:var(--acc);font-weight:600;}
 .block{margin:44px 0 0;}
 .h{display:flex;align-items:baseline;gap:12px;margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid var(--line);flex-wrap:wrap;}
 .no{font-size:13px;font-weight:700;color:var(--acc);letter-spacing:1px;}
@@ -102,7 +100,6 @@ tr.done td.go{color:var(--faint);}
     <div class="txt">已完成 <b id="pct">0</b> / {{TOTAL_DAYS}} 天</div>
     <div class="bar"><div class="fill" id="bar"></div></div>
   </div>
-  <div class="flowhint">点每行末尾的方框打卡，进度自动保存在本机浏览器。</div>
 </header>
 
 {{WEEKS}}
